@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,6 +71,28 @@ function ProjectsListing() {
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Listen for category filter events from ProjectCategories
+  useEffect(() => {
+    const handleCategoryFilter = (event: any) => {
+      const categoryMap: { [key: string]: string } = {
+        'ai-ml': 'AI/ML',
+        'cybersecurity': 'Cybersecurity',
+        'nlp': 'NLP',
+        'data-science': 'Data Science',
+        'cse-core': 'CSE Core',
+        'others': 'Others'
+      };
+      
+      const mappedCategory = categoryMap[event.detail];
+      if (mappedCategory) {
+        setSelectedCategory(mappedCategory);
+      }
+    };
+
+    window.addEventListener('filterByCategory', handleCategoryFilter);
+    return () => window.removeEventListener('filterByCategory', handleCategoryFilter);
+  }, []);
+
   const filteredProjects = sampleProjects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          project.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -96,7 +118,7 @@ function ProjectsListing() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-slate-800 to-slate-900">
+    <section id="projects-listing" className="py-20 bg-gradient-to-b from-slate-800 to-slate-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
@@ -134,7 +156,7 @@ function ProjectsListing() {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {filteredProjects.map((project) => (
-            <Card key={project.id} className="bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all duration-300 overflow-hidden flex flex-col">
+            <Card key={project.id} className="bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all duration-300 overflow-hidden flex flex-col h-full">
               <div className="relative">
                 <img 
                   src={project.image} 
@@ -146,33 +168,33 @@ function ProjectsListing() {
                 </div>
               </div>
               <CardHeader className="flex-grow">
-                <CardTitle className="text-xl mb-2 line-clamp-2">{project.title}</CardTitle>
-                <CardDescription className="text-gray-300 text-sm line-clamp-3">
+                <CardTitle className="text-xl mb-2 line-clamp-2 min-h-[3.5rem]">{project.title}</CardTitle>
+                <CardDescription className="text-gray-300 text-sm min-h-[4.5rem] line-clamp-3">
                   {project.description}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 mt-auto">
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm text-gray-400 mb-1">Technologies:</p>
-                    <p className="text-sm font-medium text-blue-300 line-clamp-2">{project.technology}</p>
+                    <p className="text-sm font-medium text-blue-300 min-h-[2.5rem] line-clamp-2">{project.technology}</p>
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between min-h-[2rem]">
                     <span className="text-2xl font-bold text-green-400">{project.price}</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 min-h-[2.5rem]">
                     <Button 
                       variant="outline" 
                       size="sm"
                       onClick={() => handleViewDetails(project)}
-                      className="border-white/20 text-white hover:bg-white/10 hover:text-white flex-1"
+                      className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white flex-1 bg-transparent"
                     >
                       View Details
                     </Button>
                     <InteractiveHoverButton 
                       text="Buy Now"
                       onClick={() => handleWhatsAppContact(project)}
-                      className="text-xs flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+                      className="text-xs flex-1"
                     />
                   </div>
                 </div>

@@ -10,13 +10,10 @@ import { LucideIcon } from "lucide-react";
 interface Tab {
   title: string;
   icon: LucideIcon;
-  type?: never;
 }
 
 interface Separator {
   type: "separator";
-  title?: never;
-  icon?: never;
 }
 
 type TabItem = Tab | Separator;
@@ -47,7 +44,7 @@ const spanVariants = {
   exit: { width: 0, opacity: 0 },
 };
 
-const transition = { delay: 0.1, type: "spring" as const, bounce: 0, duration: 0.6 };
+const transition = { delay: 0.1, type: "spring", bounce: 0, duration: 0.6 };
 
 export function ExpandableTabs({
   tabs,
@@ -76,19 +73,20 @@ export function ExpandableTabs({
     <div
       ref={outsideClickRef}
       className={cn(
-        "flex flex-wrap items-center gap-2 rounded-2xl border bg-background/50 backdrop-blur-sm p-1 shadow-sm",
+        "flex flex-wrap items-center gap-2 rounded-2xl border bg-background p-1 shadow-sm",
         className
       )}
     >
       {tabs.map((tab, index) => {
-        if (tab.type === "separator") {
+        if ("type" in tab && tab.type === "separator") {
           return <Separator key={`separator-${index}`} />;
         }
 
-        const Icon = tab.icon;
+        const tabItem = tab as Tab;
+        const Icon = tabItem.icon;
         return (
           <motion.button
-            key={tab.title}
+            key={tabItem.title}
             variants={buttonVariants}
             initial={false}
             animate="animate"
@@ -113,7 +111,7 @@ export function ExpandableTabs({
                   transition={transition}
                   className="overflow-hidden"
                 >
-                  {tab.title}
+                  {tabItem.title}
                 </motion.span>
               )}
             </AnimatePresence>
