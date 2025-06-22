@@ -10,31 +10,41 @@ export const HoverEffect = ({
   items: {
     title: string;
     description: string;
-    icon: string;
     link: string;
+    icon?: string;
   }[];
   className?: string;
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  const handleClick = (link: string) => {
+    if (link.startsWith('#')) {
+      const element = document.querySelector(link);
+      element?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.open(link, '_blank');
+    }
+  };
+
   return (
     <div
       className={cn(
-        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-10",
+        "grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3  py-10",
         className
       )}
     >
       {items.map((item, idx) => (
         <div
           key={item?.link}
-          className="relative group block p-2 h-full w-full cursor-pointer"
+          className="relative group  block p-2 h-full w-full cursor-pointer"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
+          onClick={() => handleClick(item.link)}
         >
           <AnimatePresence>
             {hoveredIndex === idx && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-slate-800/[0.8] block rounded-3xl"
+                className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-slate-800/[0.8] block  rounded-3xl"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -49,7 +59,9 @@ export const HoverEffect = ({
             )}
           </AnimatePresence>
           <Card>
-            <div className="text-4xl mb-4">{item.icon}</div>
+            {item.icon && (
+              <div className="text-4xl mb-4">{item.icon}</div>
+            )}
             <CardTitle>{item.title}</CardTitle>
             <CardDescription>{item.description}</CardDescription>
           </Card>
@@ -69,7 +81,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-full w-full p-6 overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 group-hover:border-slate-600 relative z-20 transition-all duration-300",
+        "rounded-2xl h-full w-full p-4 overflow-hidden bg-slate-800/50 border border-white/10 group-hover:border-slate-700 relative z-20",
         className
       )}
     >
@@ -88,7 +100,7 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4 text-xl", className)}>
+    <h4 className={cn("text-white font-bold tracking-wide mt-4", className)}>
       {children}
     </h4>
   );
@@ -104,7 +116,7 @@ export const CardDescription = ({
   return (
     <p
       className={cn(
-        "mt-4 text-zinc-400 tracking-wide leading-relaxed text-sm",
+        "mt-8 text-gray-300 tracking-wide leading-relaxed text-sm",
         className
       )}
     >

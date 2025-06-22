@@ -1,64 +1,42 @@
 
 import { useState } from "react";
-import { PopoverForm, PopoverFormButton, PopoverFormSuccess } from "@/components/ui/popover-form";
-
-type FormState = "idle" | "loading" | "success";
+import { RainbowButton } from "@/components/ui/rainbow-button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 function RequestProject() {
-  const [formState, setFormState] = useState<FormState>("idle");
-  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
+    whatsapp: "",
     department: "",
     projectIdea: "",
     requirements: ""
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const message = `Hi, I want to request a custom project:
+    
+Name: ${formData.name}
+Email: ${formData.email}
+WhatsApp: ${formData.whatsapp}
+Department: ${formData.department}
+Project Idea: ${formData.projectIdea}
+Requirements: ${formData.requirements}`;
+
+    const whatsappUrl = `https://wa.me/918000000000?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormState("loading");
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setFormState("success");
-      
-      // Create WhatsApp message
-      const message = `Hi! I would like to request a custom project.
-      
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Department: ${formData.department}
-Project Idea: ${formData.projectIdea}
-Requirements: ${formData.requirements}
-
-Please contact me to discuss further details.`;
-
-      const whatsappUrl = `https://wa.me/918000000000?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }, 1500);
-
-    setTimeout(() => {
-      setOpen(false);
-      setFormState("idle");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        department: "",
-        projectIdea: "",
-        requirements: ""
-      });
-    }, 3300);
   };
 
   return (
@@ -68,135 +46,137 @@ Please contact me to discuss further details.`;
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Request Your Custom Project
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-12">
-            Have a specific project idea in mind? We create custom final year projects tailored to your requirements and college guidelines.
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Can't find what you're looking for? Tell us your requirements and we'll create a custom project just for you.
           </p>
-          
-          <div className="flex justify-center">
-            <PopoverForm
-              title="Request Custom Project"
-              open={open}
-              setOpen={setOpen}
-              width="420px"
-              height="500px"
-              showCloseButton={formState !== "success"}
-              showSuccess={formState === "success"}
-              openChild={
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                      WhatsApp Number *
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-1">
-                      Department/Branch *
-                    </label>
-                    <select
-                      id="department"
-                      name="department"
-                      value={formData.department}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    >
-                      <option value="">Select Department</option>
-                      <option value="Computer Science">Computer Science</option>
-                      <option value="Information Technology">Information Technology</option>
-                      <option value="Electronics & Communication">Electronics & Communication</option>
-                      <option value="Mechanical Engineering">Mechanical Engineering</option>
-                      <option value="Civil Engineering">Civil Engineering</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="projectIdea" className="block text-sm font-medium text-gray-700 mb-1">
-                      Project Idea/Area *
-                    </label>
-                    <input
-                      type="text"
-                      id="projectIdea"
-                      name="projectIdea"
-                      value={formData.projectIdea}
-                      onChange={handleInputChange}
-                      placeholder="e.g., Machine Learning, Web Development, Mobile App"
-                      className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="requirements" className="block text-sm font-medium text-gray-700 mb-1">
-                      Project Requirements
-                    </label>
-                    <textarea
-                      id="requirements"
-                      name="requirements"
-                      value={formData.requirements}
-                      onChange={handleInputChange}
-                      rows={3}
-                      placeholder="Describe your project requirements, features needed, technologies preferred..."
-                      className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  
-                  <div className="pt-4">
-                    <PopoverFormButton
-                      loading={formState === "loading"}
-                      text="Submit Request"
-                    />
-                  </div>
-                </form>
-              }
-              successChild={
-                <PopoverFormSuccess
-                  title="Request Submitted!"
-                  description="Thank you for your request. We'll contact you within 24 hours to discuss your project."
-                />
-              }
-            />
-          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
+          <Card className="bg-white/5 border-white/10 text-white">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl mb-2">Custom Project Request</CardTitle>
+              <CardDescription className="text-gray-300">
+                Fill out the form below and we'll get back to you with a personalized quote.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-white">Full Name *</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    placeholder="Enter your full name"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-white">Email Address *</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="whatsapp" className="text-white">WhatsApp Number *</Label>
+                  <Input
+                    id="whatsapp"
+                    name="whatsapp"
+                    value={formData.whatsapp}
+                    onChange={handleChange}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    placeholder="+91 9876543210"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="department" className="text-white">Department/Branch *</Label>
+                  <Input
+                    id="department"
+                    name="department"
+                    value={formData.department}
+                    onChange={handleChange}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    placeholder="e.g., Computer Science, IT, ECE"
+                  />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="projectIdea" className="text-white">Project Idea/Domain *</Label>
+                  <Input
+                    id="projectIdea"
+                    name="projectIdea"
+                    value={formData.projectIdea}
+                    onChange={handleChange}
+                    required
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    placeholder="e.g., AI-powered chatbot, E-commerce website, Mobile app"
+                  />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="requirements" className="text-white">Detailed Requirements</Label>
+                  <Textarea
+                    id="requirements"
+                    name="requirements"
+                    value={formData.requirements}
+                    onChange={handleChange}
+                    rows={4}
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    placeholder="Please describe your project requirements, expected features, timeline, and any specific technologies you'd like to use..."
+                  />
+                </div>
+
+                <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
+                  <RainbowButton type="submit" className="w-full sm:w-auto">
+                    🚀 Request Custom Project
+                  </RainbowButton>
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    className="border-white/20 text-white hover:bg-white/10 w-full sm:w-auto"
+                    onClick={() => {
+                      const whatsappUrl = `https://wa.me/918000000000?text=Hi, I want to discuss a custom project.`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                  >
+                    💬 Chat Directly
+                  </Button>
+                </div>
+              </form>
+
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div className="bg-white/5 rounded-lg p-6">
+                  <div className="text-3xl mb-2">⚡</div>
+                  <h3 className="font-semibold mb-2">Quick Turnaround</h3>
+                  <p className="text-sm text-gray-300">Most projects delivered within 7-15 days</p>
+                </div>
+                <div className="bg-white/5 rounded-lg p-6">
+                  <div className="text-3xl mb-2">💯</div>
+                  <h3 className="font-semibold mb-2">100% Original</h3>
+                  <p className="text-sm text-gray-300">Completely original code written from scratch</p>
+                </div>
+                <div className="bg-white/5 rounded-lg p-6">
+                  <div className="text-3xl mb-2">🛠️</div>
+                  <h3 className="font-semibold mb-2">Full Support</h3>
+                  <p className="text-sm text-gray-300">Complete documentation and technical support</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

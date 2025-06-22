@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ProjectDetailsModal from "./ProjectDetailsModal";
 
 const sampleProjects = [
   {
@@ -68,6 +69,7 @@ function ProjectsListing() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredProjects = sampleProjects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -81,6 +83,16 @@ function ProjectsListing() {
     const message = `Hi, I am interested in the "${project.title}" project. Can you share more details?`;
     const whatsappUrl = `https://wa.me/918000000000?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
+  };
+
+  const handleViewDetails = (project: any) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substr(0, maxLength) + '...';
   };
 
   return (
@@ -122,7 +134,7 @@ function ProjectsListing() {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {filteredProjects.map((project) => (
-            <Card key={project.id} className="bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all duration-300 overflow-hidden">
+            <Card key={project.id} className="bg-white/5 border-white/10 text-white hover:bg-white/10 transition-all duration-300 overflow-hidden flex flex-col">
               <div className="relative">
                 <img 
                   src={project.image} 
@@ -133,35 +145,35 @@ function ProjectsListing() {
                   <Badge className="bg-blue-500 text-white">{project.category}</Badge>
                 </div>
               </div>
-              <CardHeader>
-                <CardTitle className="text-xl mb-2">{project.title}</CardTitle>
-                <CardDescription className="text-gray-300">
+              <CardHeader className="flex-grow">
+                <CardTitle className="text-xl mb-2 line-clamp-2">{project.title}</CardTitle>
+                <CardDescription className="text-gray-300 text-sm line-clamp-3">
                   {project.description}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm text-gray-400 mb-1">Technologies:</p>
-                    <p className="text-sm font-medium text-blue-300">{project.technology}</p>
+                    <p className="text-sm font-medium text-blue-300 line-clamp-2">{project.technology}</p>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-bold text-green-400">{project.price}</span>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => setSelectedProject(project)}
-                        className="border-white/20 text-white hover:bg-white/10"
-                      >
-                        View Details
-                      </Button>
-                      <InteractiveHoverButton 
-                        text="Buy Now"
-                        onClick={() => handleWhatsAppContact(project)}
-                        className="text-xs w-24 h-8"
-                      />
-                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleViewDetails(project)}
+                      className="border-white/20 text-white hover:bg-white/10 hover:text-white flex-1"
+                    >
+                      View Details
+                    </Button>
+                    <InteractiveHoverButton 
+                      text="Buy Now"
+                      onClick={() => handleWhatsAppContact(project)}
+                      className="text-xs flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -175,6 +187,17 @@ function ProjectsListing() {
           </div>
         )}
       </div>
+
+      {selectedProject && (
+        <ProjectDetailsModal
+          project={selectedProject}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedProject(null);
+          }}
+        />
+      )}
     </section>
   );
 }

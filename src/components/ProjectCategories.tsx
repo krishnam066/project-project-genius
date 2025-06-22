@@ -6,37 +6,37 @@ const categories = [
     title: "AI/ML Projects",
     description: "Machine Learning algorithms, Deep Learning models, Computer Vision, and AI-powered applications ready for implementation.",
     icon: "🧠",
-    link: "/projects/aiml"
+    link: "#projects"
   },
   {
     title: "Cybersecurity",
     description: "Network security systems, Penetration testing tools, Encryption algorithms, and Security audit applications.",
     icon: "🛡️",
-    link: "/projects/cybersecurity"
+    link: "#projects"
   },
   {
     title: "NLP Projects",
     description: "Natural Language Processing, Text Analysis, Chatbots, Sentiment Analysis, and Language Translation systems.",
     icon: "🧾",
-    link: "/projects/nlp"
+    link: "#projects"
   },
   {
     title: "Data Science",
     description: "Data Analytics, Visualization dashboards, Statistical modeling, and Big Data processing solutions.",
     icon: "📊",
-    link: "/projects/datascience"
+    link: "#projects"
   },
   {
     title: "CSE Core Projects",
     description: "Web Development, Mobile Apps, Database Management, System Design, and Software Engineering projects.",
     icon: "💻",
-    link: "/projects/cse"
+    link: "#projects"
   },
   {
     title: "Others",
     description: "IoT projects, Blockchain applications, Game development, and other innovative technology solutions.",
     icon: "➕",
-    link: "/projects/others"
+    link: "#projects"
   }
 ];
 
