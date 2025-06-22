@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, PhoneCall } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { GradientButton } from "@/components/ui/gradient-button";
 
 function Hero() {
   const [titleNumber, setTitleNumber] = useState(0);
@@ -21,6 +22,16 @@ function Hero() {
     }, 2000);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
+
+  const handleBrowseProjects = () => {
+    const projectsSection = document.getElementById('projects');
+    projectsSection?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleRequestProject = () => {
+    const requestSection = document.getElementById('request');
+    requestSection?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -67,12 +78,19 @@ function Hero() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="gap-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white border-0" variant="outline">
-              📂 Browse Available Projects <ArrowRight className="w-4 h-4" />
-            </Button>
-            <Button size="lg" className="gap-4 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white">
-              ✅ Request Your Own Project <PhoneCall className="w-4 h-4" />
-            </Button>
+            <GradientButton 
+              onClick={handleBrowseProjects}
+              className="gap-4"
+            >
+              Browse Available Projects <ArrowRight className="w-4 h-4" />
+            </GradientButton>
+            <GradientButton 
+              variant="variant"
+              onClick={handleRequestProject} 
+              className="gap-4"
+            >
+              Request Your Own Project <PhoneCall className="w-4 h-4" />
+            </GradientButton>
           </div>
         </div>
       </div>
